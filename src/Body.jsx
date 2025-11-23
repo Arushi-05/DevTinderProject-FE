@@ -10,8 +10,6 @@ const Body = () => {
   const navigate = useNavigate();
   const userData = useSelector((store) => store.user)
   const fetchUser = async () => {
-
-
     try {
       const res = await axios.get("http://localhost:8000/profile/view", { withCredentials: true })
       dispatch(addUser(res.data))

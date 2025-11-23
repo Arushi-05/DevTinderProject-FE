@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { addFeed } from './utils/feedSlice';
-
-import UserCard from "./UserCard";
-
+import UserCard from './UserCard';
 const Feed = () => {
   const [error, setError] = useState("");
   const feed = useSelector((store) => store.feed)
@@ -20,6 +18,7 @@ const Feed = () => {
       console.log(err)
     }
   }
+  console.log("feed comp data:" , feed)
 
   useEffect(() => {
     if (!feed) {
@@ -31,13 +30,20 @@ const Feed = () => {
     return <div className="text-error">Error: {error}</div>
   }
 
+  if (!feed) {
+    return <div className="flex justify-center my-20">Loading feed…</div>
+  }
+
+  if (!feed.length) {
+    return <div className="flex justify-center my-20">No profiles found right now.</div>
+  }
+
   return (
-    feed &&
-    <div className='flex justify-center my-20 '>
-       <UserCard user={feed[0]}/>
+    <div className="flex flex-wrap justify-center gap-6 my-20">
+      {feed.map((user, idx) => (
+        <UserCard key={user?._id || user?.id || idx} user={user} showActions={true} />
+      ))}
     </div>
-   
   )
 }
-
 export default Feed
