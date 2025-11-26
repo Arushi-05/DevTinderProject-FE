@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { addUser } from './utils/userSlice';
+import { removeFeed } from './utils/feedSlice';
+import { removeConnections } from './utils/connectionsSlice';
 import { useNavigate } from 'react-router-dom';
 const Login = () => {
     const [emailId, setEmailId] = useState("arushi@gmail.com");
@@ -19,6 +21,9 @@ const Login = () => {
             // Handle nested response structure - check for common patterns
             const userData = res.data.user || res.data.data || res.data
             console.log("User data being dispatched:", userData)
+            // Clear old feed and connections before adding new user
+            dispatch(removeFeed())
+            dispatch(removeConnections())
             dispatch(addUser(userData))
             return navigate("/feed")
         }

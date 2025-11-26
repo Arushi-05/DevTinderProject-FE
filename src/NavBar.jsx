@@ -1,6 +1,8 @@
 import { useSelector, useDispatch } from "react-redux";
 import axios from 'axios';
 import { removeUser, addUser } from './utils/userSlice';
+import { removeFeed } from './utils/feedSlice';
+import { removeConnections } from './utils/connectionsSlice';
 import { Link, useNavigate } from 'react-router-dom';
 const NavBar = () => {
   const user = useSelector((store) =>store.user)
@@ -11,6 +13,8 @@ const NavBar = () => {
     try {
       const res = await axios.post("http://localhost:8000/logout", {}, { withCredentials: true })
       dispatch(removeUser())
+      dispatch(removeFeed())
+      dispatch(removeConnections())
       return navigate("/login")
     }
     catch (err) {
@@ -22,7 +26,7 @@ const NavBar = () => {
 return (
   <div className="navbar bg-base-300 shadow-sm">
     <div className="flex-1">
-      <Link to="/feed" className="btn btn-ghost text-xl">Dev Tinder</Link>
+      <Link to="/feed" className="btn btn-ghost text-xl">Cric Connect</Link>
     </div>
     <div className="flex gap-2">
       <div className="dropdown dropdown-end mx-3">
@@ -42,7 +46,7 @@ return (
               Profile
             </Link>
           </li>
-          <li><a>Settings</a></li>
+          <li><Link to="/connections">My Connections</Link></li>
           <li onClick={handleLogout} ><Link >Logout</Link></li>
         </ul>
       </div>

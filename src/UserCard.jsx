@@ -1,7 +1,20 @@
 import React from 'react'
 
 const UserCard = ({ user, showActions = false }) => {
-  const {firstName, lastName, age, gender, photoUrl, skills} = user;
+  if (!user) {
+    return null;
+  }
+
+  const {
+    firstName  = '',
+    lastName = '',
+    age = '',
+    gender = '',
+    photoUrl = '',
+    skills = [],
+  } = user;
+
+  const displaySkills = Array.isArray(skills) ? skills : [];
   return (
     <div className="card bg-base-300 w-96 shadow-sm cursor-pointer">
       <figure>
@@ -14,7 +27,7 @@ const UserCard = ({ user, showActions = false }) => {
           {firstName + " " + lastName}
           <div className="badge badge-secondary">{gender + ", " + age}</div>
         </h2>
-        <p>{skills.join(", ")}</p>
+        <p>{displaySkills.join(", ")}</p>
         {showActions && (
           <div className="card-actions justify-end">
             <div className="badge badge-outline">Interested</div>

@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { addUser } from './utils/userSlice';
+import { addFeed } from './utils/feedSlice';
 
 const EditProfile = ({ user }) => {
     const [firstName, setFirstName] = useState(user?.firstName || '');
