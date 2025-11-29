@@ -8,6 +8,37 @@ const Feed = () => {
   const feed = useSelector((store) => store.feed)
   const user = useSelector((store) => store.user)
   const dispatch = useDispatch()
+  
+  const handleInterested = async (user) => {
+    try {
+      // Send a request/interest to the user with status "interested"
+      await axios.post(`http://localhost:8000/request/send/interested/${user._id}`, {}, { withCredentials: true })
+      // Remove the user from the feed after showing interest
+      if (feed && Array.isArray(feed)) {
+        const updatedFeed = feed.filter(feedUser => feedUser._id !== user._id)
+        dispatch(addFeed(updatedFeed))
+      }
+    } catch (err) {
+      setError(err?.response?.data?.message || err?.message || "something went wrong")
+      console.log("Error sending interest:", err)
+    }
+  }
+
+  const handleIgnore = async (user) => {
+    try {
+
+      await axios.post(`http://localhost:8000/request/send/ignored/${user._id}`, {}, { withCredentials: true })
+    
+      if (feed && Array.isArray(feed)) {
+        const updatedFeed = feed.filter(feedUser => feedUser._id !== user._id)
+        dispatch(addFeed(updatedFeed))
+      }
+    } catch (err) {
+      setError(err?.response?.data?.message || err?.message || "something went wrong")
+      console.log("Error ignoring user:", err)
+    }
+  }
+
   const getFeed = async () => {
     try {
       const res = await axios.get("http://localhost:8000/feed", { withCredentials: true })
@@ -23,12 +54,12 @@ const Feed = () => {
   console.log("feed comp data:" , feed)
 
   useEffect(() => {
-    // Clear feed when user changes or logs out
+   
     if (!user) {
       dispatch(removeFeed())
       return
     }
-    // Fetch feed when user is available
+  
     getFeed()
   }, [user, dispatch])
 
@@ -47,7 +78,13 @@ const Feed = () => {
   return (
     <div className="flex flex-wrap justify-center gap-6 my-20">
       {feed.map((user, idx) => (
-        <UserCard key={user?._id || user?.id || idx} user={user} showActions={true} />
+        <UserCard 
+          key={user?._id || user?.id || idx} 
+          user={user} 
+          showActions={true}
+          onClickPrimary={handleInterested}
+          onClickSecondary={handleIgnore}
+        />
       ))}
     </div>
   )

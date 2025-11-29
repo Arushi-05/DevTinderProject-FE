@@ -4,7 +4,6 @@ const ConnectionsCard = ({ connection }) => {
   if (!connection) {
     return null;
   }
-
   const {
     firstName  = '',
     lastName = '',

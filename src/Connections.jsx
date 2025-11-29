@@ -19,29 +19,45 @@ const Connections = () => {
     // Fetch connections when user is available
     const fetchConnections = async () => {
       try {
+        const loggedInUserId = user._id
         const res = await axios.get("http://localhost:8000/connections", { withCredentials: true })
-        // const connectionData =
-        //   res.data.data.fromUserId ||
-        //   res.data ||
-        //   res.data?.data ||
-        //   res.fromUserId || res.data.fromUserId ||
-        //   res.data 
-        const connectionData = res.data.data.map(item => ({
-            _id: item.fromUserId._id,
-            firstName: item.fromUserId.firstName,
-            lastName: item.fromUserId.lastName,
-            age: item.fromUserId.age,
-            gender: item.fromUserId.gender,
-            skills: item.fromUserId.skills,
-            photoUrl: item.fromUserId.photoUrl,
-            status: item.status
-          }));
-        console.log(" res from BE:", res.data.data)
+        console.log("response from connection api: ", res)
+        
+        const connectionData = res.data.data.map(item => {
+          //  if loggedin user is myself
+          if (item.fromUserId._id === loggedInUserId) {
+   
+            return {
+              _id: item.toUserId._id,
+              firstName: item.toUserId.firstName,
+              lastName: item.toUserId.lastName,
+              age: item.toUserId.age,
+              gender: item.toUserId.gender,
+              skills: item.toUserId.skills,
+              photoUrl: item.toUserId.photoUrl,
+              status: item.status
+            }
+          } else {
+            // If loggedin user is other user, show fromUserId data
+            return {
+              _id: item.fromUserId._id,
+              firstName: item.fromUserId.firstName,
+              lastName: item.fromUserId.lastName,
+              age: item.fromUserId.age,
+              gender: item.fromUserId.gender,
+              skills: item.fromUserId.skills,
+              photoUrl: item.fromUserId.photoUrl,
+              status: item.status
+            }
+          }
+        });
+        
         console.log("connectionData:", connectionData)
         dispatch(addConnections(connectionData))
 
       } catch (err) {
         setError(err?.response?.data?.message || err?.message || "something went wrong")
+
         console.log(err)
       }
     }

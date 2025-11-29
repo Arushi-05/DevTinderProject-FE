@@ -21,8 +21,7 @@ const NavBar = () => {
       console.log(err)
     }
   }
- 
-
+  
 return (
   <div className="navbar bg-base-300 shadow-sm">
     <div className="flex-1">
@@ -47,7 +46,9 @@ return (
             </Link>
           </li>
           <li><Link to="/connections">My Connections</Link></li>
+          <li><Link to="/request/received">My Requests</Link></li>
           <li onClick={handleLogout} ><Link >Logout</Link></li>
+          
         </ul>
       </div>
     </div>

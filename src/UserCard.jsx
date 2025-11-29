@@ -1,6 +1,6 @@
 import React from 'react'
 
-const UserCard = ({ user, showActions = false }) => {
+const UserCard = ({ user, showActions = false, primaryLabel = "Interested", secondaryLabel = "Ignore", onClickPrimary, onClickSecondary }) => {
   if (!user) {
     return null;
   }
@@ -30,8 +30,18 @@ const UserCard = ({ user, showActions = false }) => {
         <p>{displaySkills.join(", ")}</p>
         {showActions && (
           <div className="card-actions justify-end">
-            <div className="badge badge-outline">Interested</div>
-            <div className="badge badge-outline">Ignore</div>
+            <div 
+              className="badge badge-outline cursor-pointer hover:badge-primary" 
+              onClick={onClickPrimary ? () => onClickPrimary(user) : undefined}
+            >
+              {primaryLabel}
+            </div>
+            <div 
+              className="badge badge-outline cursor-pointer hover:badge-error" 
+              onClick={onClickSecondary ? () => onClickSecondary(user) : undefined}
+            >
+              {secondaryLabel}
+            </div>
           </div>
         )}
       </div>
