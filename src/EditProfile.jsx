@@ -9,6 +9,7 @@ const EditProfile = ({ user }) => {
     const [firstName, setFirstName] = useState(user?.firstName || '');
     const [lastName, setLastName] = useState(user?.lastName || '');
     const [age, setAge] = useState(user?.age || '');
+    const [pfp, setPfp] = useState(user?.photoUrl || '');
     const [skills, setSkills] = useState(Array.isArray(user?.skills) ? user.skills.join(", ") : '');
     const [gender, setGender] = useState(user?.gender || '');
     const [error, setError] = useState("");
@@ -24,6 +25,7 @@ const EditProfile = ({ user }) => {
             setAge(user.age || '');
             setSkills(Array.isArray(user.skills) ? user.skills.join(", ") : '');
             setGender(user.gender || '');
+            setPfp(user.photoUrl || '');
         }
     }, [user?.firstName, user?.lastName, user?.age, user?.gender, user?.skills]);
 
@@ -32,7 +34,7 @@ const EditProfile = ({ user }) => {
             const skillsArray = skills.split(",").map(s => s.trim()).filter(s => s.length > 0);
             const res = await axios.patch(
                 "http://localhost:8000/profile/edit",
-                { firstName, lastName, age, gender, skills: skillsArray },
+                { firstName, lastName, age, gender, skills: skillsArray ,photoUrl: pfp},
                 { withCredentials: true }
             );
             const updatedUserData = res.data.user || res.data.data || res.data;
@@ -75,6 +77,10 @@ const EditProfile = ({ user }) => {
                     <fieldset className="fieldset">
                         <legend className="fieldset-legend">Skills</legend>
                         <input type="text" value={skills} onChange={(e) => setSkills(e.target.value)} className="input" placeholder="Type here" />
+                    </fieldset>
+                    <fieldset className="fieldset">
+                        <legend className="fieldset-legend">Profile Picture</legend>
+                        <input type="text" value={pfp} onChange={(e) => setPfp(e.target.value)} className="input" placeholder="Paste image URL here" />
                     </fieldset>
                     {error && <p className='text-red-500'>{error}</p>}
                     <div className="card-actions justify-end">
